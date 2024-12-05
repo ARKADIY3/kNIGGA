@@ -1,81 +1,133 @@
-import org.example.Category;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.FileWriter;
-import java.io.FileReader;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-class Main {
-    public static void main(String[] args) {
-//        Book book1 = new Book ("1", "1", "1", 1, Category.Homestay, "а");
-//        System.out.println(book1.toString());
-        System.out.println();
-        System.out.println("Добро пожаловать в программу созданную Максимом и Аркадием!");
-        System.out.println("Наша программа позволяет вам создать свою личную библиотеку uWu");
-        System.out.println("Выберите необходимое действие ниже:");
-        System.out.println();
-        System.out.println("1) Создать свою личную библиотеку");
-        System.out.println("2) Добавить книгу в личную библиотеку");
-        System.out.println("3) Найти книгу в личной библиотеке");
-        System.out.println("4) Удалить книгу из личной библиотеки");
-        Scanner input = new Scanner(System.in);
-        int inputValue = input.nextInt();
-        input.close();
+public class Main {
 
-        switch (inputValue) {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Добро пожаловать в программу созданую Максимом и Аркадием одной жаркой ночью..\n Введите число: \n1 - Создание своей библиотеки \n2 - Добавить книгу \n3 - Поиск книги по параметрам \n4 - Удаление книги");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (choice) {
             case 1:
-                createPersonalLibrary();
+                createLibrary();
                 break;
             case 2:
-                addBook();
+                addBook(scanner);
                 break;
             case 3:
-                readFile();
+                searchBook(scanner);
                 break;
             case 4:
-                System.out.println("Вы выбрали опцию 4.");
+                deleteBook(scanner);
                 break;
             default:
-                System.out.println("Ошибка ввода. Пожалуйста, введите цифру 1, 2, 3 или 4 и повторите попытку.");
-                break;
+                System.out.println("Вы ввели неккоректное значение. Попробуйте ввести цифру 1 до 4.");
         }
     }
 
-    private static void createPersonalLibrary() {
+    private static void createLibrary() {
         try {
-            File newFile = new File("Личная Библиотека.txt");
+            File newFile = new File("Личная библиотека.txt");
             if (newFile.createNewFile()) {
-                System.out.println("Вы успешно создали свою личную библиотеку, время заполнить её кНигами!");
+                System.out.println("Вы успешно создали свою личную библиотеку, время заполнить её книгами!");
             } else {
                 System.out.println("У вас уже есть своя личная библиотека.");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Ошибка при создании библиотеки: " + e.getMessage());
         }
     }
 
-    private static void addBook() {
-        try {
-            FileWriter writer = new FileWriter("Личная Библиотека.txt");
-            writer.write("1");
-            writer.close();
-            System.out.println("Запись данных в файл прошла успешно");
+    private static void addBook(Scanner scanner) {
+        System.out.println("Введите информацию о вашей кНИГЕ:");
+        System.out.print("Автор: ");
+        String author = scanner.nextLine();
+        System.out.print("Название: ");
+        String title = scanner.nextLine();
+        System.out.print("Издатель: ");
+        String publisher = scanner.nextLine();
+        System.out.print("Год выпуска: ");
+        String year = scanner.nextLine();
+        System.out.print("Страна происхождения: ");
+        String country = scanner.nextLine();
+        System.out.print("Раздел библиотеки: ");
+        String librarySection = scanner.nextLine();
+
+        Book newBook = new Book(author, title, publisher, year, country, librarySection);
+
+        try (FileWriter writer = new FileWriter("Личная библиотека.txt", true)) {
+            writer.write(newBook.getAuthor() + "|" + newBook.getTitle() + "|" + newBook.getPublisher() + "|" +
+                    newBook.getYear() + "|" + newBook.getCountry() + "|" + newBook.getLibrarySection() + "\n");
+            System.out.println("кНИГА успешно добавлена!");
         } catch (IOException e) {
-            System.out.println("Ошибка при записи в файл");
-            e.printStackTrace();
+            System.out.println("Ошибка при добавлении кНИГИ 0_0: " + e.getMessage());
         }
     }
 
-    private static void readFile() {
-        try (FileReader reader = new FileReader("NewDelftstack.txt")) {
-            int c;
-            while ((c = reader.read()) != -1) {
-                System.out.print((char) c);
+    private static void searchBook(Scanner scanner) {
+        System.out.println("Введите параметр для поиска (Автор, Название, Издатель, Год, Страна, Раздел):");
+        String query = scanner.nextLine();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("Личная библиотека.txt"))) {
+            String line;
+            boolean found = false;
+
+            while ((line = reader.readLine()) != null) {
+                if (line.toLowerCase().contains(query.toLowerCase())) {
+                    System.out.println("Найдена книга: " + line);
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                System.out.println("Книга с таким параметром не найдена.");
             }
         } catch (IOException e) {
-            System.out.println("Считать файл не получилось");
-            e.printStackTrace();
+            System.out.println("Ошибка при поиске книги: " + e.getMessage());
+        }
+    }
+
+    private static void deleteBook(Scanner scanner) {
+        System.out.println("Введите параметр книги, которую хотите удалить:");
+        String query = scanner.nextLine();
+
+        List<String> books = new ArrayList<>();
+        boolean found = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("Личная библиотека.txt"))) {
+            String line;
+
+
+            while ((line = reader.readLine()) != null) {
+                if (line.toLowerCase().contains(query.toLowerCase())) {
+                    found = true;
+                    System.out.println("Удалена книга: " + line);
+                } else {
+                    books.add(line);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка при удалении книги: " + e.getMessage());
+            return;
+        }
+
+        if (found) {
+            try (FileWriter writer = new FileWriter("Личная библиотека.txt")) {
+                for (String book : books) {
+                    writer.write(book + "\n");
+                }
+                System.out.println("Библиотека успешно обновлена.");
+            } catch (IOException e) {
+                System.out.println("Ошибка при обновлении файла: " + e.getMessage());
+            }
+        } else {
+            System.out.println("Книга с таким параметром не найдена.");
         }
     }
 }

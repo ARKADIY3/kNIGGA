@@ -1,12 +1,10 @@
-import org.example.Category;
-
 public class Book {
     private String Author;
     private String Title;
     private String Publisher;
-    private int Year;
-    private Category category;
+    private String Year;
     private String Country;
+    private String librarySection;
 
     public String getAuthor() {
         return Author;
@@ -32,20 +30,20 @@ public class Book {
         Publisher = publisher;
     }
 
-    public int getYear() {
+    public String getYear() {
         return Year;
     }
 
-    public void setYear(int year) {
+    public void setYear(String year) {
         Year = year;
     }
 
-    public Category getCategory() {
-        return category;
+    public String getLibrarySection() {
+        return librarySection;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setLibrarySection(String librarySection) {
+        this.librarySection = librarySection;
     }
 
     public String getCountry() {
@@ -56,29 +54,12 @@ public class Book {
         Country = country;
     }
 
-
-
-    public Book(String author, String title, String publisher, int year, Category category, String country) {
+    public Book(String author, String title, String publisher, String year, String country, String librarySection) {
         Author = author;
         Title = title;
         Publisher = publisher;
         Year = year;
-        this.category = category;
         Country = country;
-    }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "Автор ='" + Author + '\'' +
-                ", Название ='" + Title + '\'' +
-                ", Издатель ='" + Publisher + '\'' +
-                ", Год =" + Year +
-                ", Категория =" + category +
-                ", Страна ='" + Country + '\'' +
-                '}';
+        this.librarySection = librarySection;
     }
 }
-
-
-
