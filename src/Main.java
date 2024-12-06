@@ -8,27 +8,32 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Добро пожаловать в программу созданую Максимом и Аркадием одной жаркой ночью..\n Введите число: \n1 - Создание своей библиотеки \n2 - Добавить книгу \n3 - Поиск книги по параметрам \n4 - Удаление книги");
+        System.out.println("Добро пожаловать в программу созданную Максимом и Аркадием одной жаркой ночью..\n Введите число: \n0 - Выйти из программы \n1 - Создание своей библиотеки \n2 - Добавить книгу \n3 - Поиск книги по параметрам \n4 - Удаление книги");
 
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-
-        switch (choice) {
-            case 1:
-                createLibrary();
-                break;
-            case 2:
-                addBook(scanner);
-                break;
-            case 3:
-                searchBook(scanner);
-                break;
-            case 4:
-                deleteBook(scanner);
-                break;
-            default:
-                System.out.println("Вы ввели неккоректное значение. Попробуйте ввести цифру 1 до 4.");
+        int choice;
+        do {
+            choice = scanner.nextInt();
+            switch (choice) {
+                case 0:
+                    break;
+                case 1:
+                    createLibrary();
+                    break;
+                case 2:
+                    addBook(scanner);
+                    break;
+                case 3:
+                    searchBook(scanner);
+                    break;
+                case 4:
+                    deleteBook(scanner);
+                    break;
+                default:
+                    System.out.println("Вы ввели некорректное значение. Попробуйте ввести цифру 1 до 4.");
+            }
         }
+        while (choice != 0);
+        scanner.close();
     }
 
     private static void createLibrary() {
@@ -131,3 +136,4 @@ public class Main {
         }
     }
 }
+
